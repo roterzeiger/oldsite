@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hatte langeweile</title>
+    <style>
+        :root {
+            --background-color: #f0f0f0;
+            --text-color: #333;
+            --link-color: #007bff;
+            --header-footer-bg: #007bff;
+            --header-footer-text: #fff;
+        }
+
+        [data-theme="dark"] {
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --link-color: #1e90ff;
+            --header-footer-bg: #1e90ff;
+            --header-footer-text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        main {
+            margin: 20px;
+            max-width: 90%;
+            width: 600px;
+        }
+
+        a {
+            color: var(--link-color);
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px;
+            background-color: var(--link-color);
+            color: var(--header-footer-text);
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .dark-mode-toggle:hover {
+            background-color: var(--header-footer-bg);
+        }
+
+        #altButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            display: none;
+            cursor: pointer;
+            background-color: var(--link-color);
+            color: var(--header-footer-text);
+            border: none;
+            border-radius: 5px;
+        }
+
+        #gifImage {
+            margin-top: 20px;
+            display: none;
+            max-width: 100%;
+            height: auto;
+        }
+
+        #passwordInput, #textInput {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.2em;
+            padding: 10px;
+            border: 2px solid var(--link-color);
+            border-radius: 5px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #successMessage {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: var(--link-color);
+        }
+
+        #countdown {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: var(--link-color);
+        }
+
+        #releaseText {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: var(--link-color);
+        }
+
+        @media (max-width: 600px) {
+            .dark-mode-toggle {
+                width: 100%;
+                font-size: 1em;
+            }
+
+            #altButton {
+                width: 100%;
+                font-size: 1em;
+            }
+
+            #passwordInput, #textInput {
+                font-size: 1em;
+                padding: 8px;
+            }
+
+            #countdown, #releaseText {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h2>Sinn der Website</h2>
+        <p>Ich hatte langeweile</p>
+
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode umschalten</button>
+
+        <button id="altButton" onclick="showGif()">Drück mich</button>
+        <img id="gifImage" src="https://media.giphy.com/media/l4FGn8Asi6rrg5wVy/giphy.gif" alt="HAHA Funny gif">
+        
+        <input type="password" id="passwordInput" placeholder="Passwort eingeben">
+        <p id="successMessage">Beta Ende voll Version kommt am 31.8.2024</p>
+        <input type="text" id="textInput" placeholder="Gib hier deinen Text ein">
+
+        <div id="countdown"></div>
+        <p id="releaseText">Voll Version Release</p>
+    </main>
+
+    <script>
+        function toggleDarkMode() {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            const targetTheme = currentTheme === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", targetTheme);
+            localStorage.setItem("theme", targetTheme);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("theme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+
+            // Start the countdown timer
+            startCountdown();
+        });
+
+        let twoPressed = false;
+        let fivePressed = false;
+        let eightPressed = false;
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "2") {
+                twoPressed = true;
+            }
+            if (twoPressed && event.key === "5") {
+                fivePressed = true;
+            }
+            if (fivePressed && event.key === "8") {
+                eightPressed = true;
+            }
+            if (twoPressed && fivePressed && eightPressed) {
+                document.getElementById("passwordInput").style.display = "block";
+                document.getElementById("passwordInput").focus();
+                twoPressed = false;
+                fivePressed = false;
+                eightPressed = false;
+            }
+        });
+
+        document.addEventListener("keyup", (event) => {
+            if (event.key === "2") {
+                twoPressed = false;
+            }
+            if (event.key === "5") {
+                fivePressed = false;
+            }
+            if (event.key === "8") {
+                eightPressed = false;
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.altKey) {
+                document.getElementById("altButton").style.display = "block";
+            } else if (event.key === "1") {
+                document.getElementById("passwordInput").style.display = "block";
+                document.getElementById("passwordInput").focus();
+            }
+        });
+
+        document.addEventListener("keyup", (event) => {
+            if (!event.altKey) {
+                document.getElementById("altButton").style.display = "none";
+            }
+        });
+
+        document.getElementById("passwordInput").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                const password = event.target.value;
+                if (password === "Sicher") {
+                    document.getElementById("passwordInput").style.display = "none";
+                    document.getElementById("textInput").style.display = "block";
+                    document.getElementById("successMessage").style.display = "block";
+                    document.getElementById("textInput").focus();
+                } else {
+                    alert("Falsches Passwort. Bitte versuche es erneut.");
+                }
+            }
+        });
+
+        function showGif() {
+            document.getElementById("gifImage").style.display = "block";
+        }
+
+        function startCountdown() {
+            const countdownDate = new Date("August 31, 2024 00:00:00").getTime();
+
+            const interval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = countdownDate - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown").innerHTML =
+                    `${days} Tage ${hours} Stunden ${minutes} Minuten ${seconds} Sekunden`;
+
+                if (distance < 0) {
+                    clearInterval(interval);
+                    document.getElementById("countdown").innerHTML = "Der Countdown ist abgelaufen!";
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
